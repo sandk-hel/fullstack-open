@@ -1,0 +1,31 @@
+note over browser: 
+The page  https://fullstack-exampleapp.herokuapp.com/notes is  preloaded.
+The textfield has html attribute for name as note
+Suppose we fill the textfield with text 'My new note' and press submit button
+end note 
+
+browser->server: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note (with form data {note: 'My new note'})
+server-->browser: Sends HTTP status code 302 ie. redirect status response code  (response header has attribute 'Location' equal to /notes)
+note over browser:
+The Location header in response is used to send a for sending a new html page request to  /notes
+end note 
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/notes 
+server-->browser: HTML-code
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.css
+server-->browser: main.css
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/main.js
+server-->browser: main.js
+
+note over browser:
+browser executes js-code and 
+requests JSON data from server
+end note
+
+browser->server: HTTP GET https://fullstack-exampleapp.herokuapp.com/data.json
+server-->browser: [..., { content: "My new note", date: "2020-04-06" }]
+
+note over browser:
+browser executes the event handler
+that renders notes to display
+end note

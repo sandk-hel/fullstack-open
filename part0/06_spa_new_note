@@ -1,0 +1,14 @@
+note over browser: 
+The page  https://fullstack-exampleapp.herokuapp.com/spa as single page app.
+The textfield has html attribute for name as note
+The action and method attribute for form is not assigned.
+Suppose we fill the textfield with text 'My new note' and press submit button
+end note 
+
+browser->server: Browser executes js code and send POST request to https://fullstack-exampleapp.herokuapp.com/new_note_spa (with form data {content: 'My new note', date: '2020-04-06T18:20:46.394Z'})
+server-->browser: Sends JSON response {"message":"note created"} with HTTP status code 201 ie. 201 status code means that a new note was created in server
+
+note over browser:
+browser executes js-code based on the server status 
+appends the new list item to the existing lists
+end note
