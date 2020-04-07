@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+const Header = (props) =>  <h1>{props.course}</h1>
+const Total = (props) => <p>Number of exercises {props.exercises}</p>
+
 const App = () =>  {
   const course = 'Half Stack application development'
   const part1 = 'Fundamentals of React'
@@ -10,9 +13,7 @@ const App = () =>  {
   const part3 = 'State of a component'
   const exercises3 = 14
 
-  return (
-    <div>
-      <h1>{course}</h1>
+  const Content = () => <>
       <p>
         {part1} {exercises1}
       </p>
@@ -22,7 +23,13 @@ const App = () =>  {
       <p>
         {part3} {exercises3}
       </p>
-      <p>Number of exercises {exercises1 + exercises2 + exercises3}</p>
+    </>
+
+  return (
+    <div>
+      <Header course={course}/>
+      <Content />
+      <Total exercises={exercises1 + exercises2 + exercises3} />
     </div>
   )
 }
