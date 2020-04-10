@@ -1,5 +1,6 @@
 import React from 'react'
 import Course from './Course' 
+import Total from './Total'
 
 const App = () =>  {
   const course = {
@@ -20,6 +21,11 @@ const App = () =>  {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
@@ -28,6 +34,7 @@ const App = () =>  {
     return (
       <div>
         <Course course={course} />
+        <Total course={course} />
       </div>
     )
 }
