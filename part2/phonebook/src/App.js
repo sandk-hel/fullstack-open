@@ -2,16 +2,24 @@ import React, { useState } from 'react';
 
 const App = () => {
   const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', phone: '040-1234567' }
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ])
-  const [ newPerson, setNewPerson ] = useState({name: '', phone: ''})
+  const [ searchText, setSearchText ] = useState('')
+  const [ newPerson, setNewPerson ] = useState({name: '', number: ''})
+
+  const personsToShow = searchText.length === 0 
+    ? [...persons]
+    : persons.filter(person => person.name.toLowerCase().includes(searchText.toLowerCase()))
 
   const handleNameChange = (event) => {
     setNewPerson({...newPerson, name: event.target.value})
   }
 
   const handlePhoneChange = (event) => {
-    setNewPerson({...newPerson, phone: event.target.value})
+    setNewPerson({...newPerson, number: event.target.value})
   }
 
   const addNewPerson = (event) => {
@@ -19,16 +27,20 @@ const App = () => {
     const containsName = persons.some(person => person.name === newPerson.name)
     if(containsName) {
       alert(`${newPerson.name} is already added to phonebook`)
-      setNewPerson({name: '', phone: ''})
+      setNewPerson({name: '', number: ''})
       return
     }
-    setNewPerson({name: '', phone: ''})
+    setNewPerson({name: '', number: ''})
     setPersons([...persons, newPerson])
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        filter shown with<input value={searchText} onChange={ event => setSearchText(event.target.value) } />
+      </div>
+      <h2>add a new </h2>
       <form onSubmit={addNewPerson}>
         <div>
           name: 
@@ -39,18 +51,17 @@ const App = () => {
         </div>
         <div>
           number: 
-          <input value={newPerson.phone} 
+          <input value={newPerson.number} 
                   onChange={handlePhoneChange}
                   />
           
         </div>
-
         <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(person => <p key={person.name}>{person.name} {person.phone}</p>)}
+      {personsToShow.map(person => <p key={person.name}>{person.name} {person.number}</p>)}
       {/* <div>debug: {newName}</div> */}
     </div>
   )
