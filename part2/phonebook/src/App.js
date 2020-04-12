@@ -52,6 +52,10 @@ const App = () => {
             setPersons(newPersons)
             showMessage(true, `Updated ${newPerson.name}`)
           })
+          .catch(() => {
+            setPersons(persons.filter(person => person.id !== existingPerson.id))
+            showMessage(false, `Information of ${newPerson.name} has already been removed from server`)
+          }) 
       }
 
       setNewPerson({ name: '', number: '' })
@@ -77,6 +81,11 @@ const App = () => {
       .remove(id)
       .then(() => {
         setPersons(persons.filter(p => person.id !== p.id))
+        showMessage(true, `Deleted ${person.name}`)
+      })
+      .catch(() => {
+        setPersons(persons.filter(p => person.id !== p.id))
+        showMessage(false, `Information of ${person.name} has already been removed from server`)
       })
   }
 
