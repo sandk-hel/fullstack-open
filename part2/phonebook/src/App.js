@@ -37,8 +37,13 @@ const App = () => {
       setNewPerson({ name: '', number: '' })
       return
     }
-    setNewPerson({ name: '', number: '' })
-    setPersons([...persons, newPerson])
+    
+    axios
+      .post('/persons', newPerson)
+      .then(response => {
+        setNewPerson({ name: '', number: '' })
+        setPersons([...persons, response.data])
+      })
   }
 
   return (
