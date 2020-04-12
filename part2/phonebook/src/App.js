@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [searchText, setSearchText] = useState('')
   const [newPerson, setNewPerson] = useState({ name: '', number: '' })
+  const [message, setMessage] = useState({isSuccess: true, text: null})
 
   useEffect(() => {
     personService
@@ -30,6 +31,13 @@ const App = () => {
     setNewPerson({ ...newPerson, number: event.target.value })
   }
 
+  const showMessage = (isSuccess, text) => {
+    setMessage({isSuccess: isSuccess, text: text})
+    setTimeout(() => {
+      setMessage({...message, text: null})
+    }, 5000)
+  }
+
   const addNewPerson = (event) => {
     event.preventDefault()
     const existingPerson = persons.find(person => person.name === newPerson.name)
@@ -39,8 +47,10 @@ const App = () => {
         personService
           .update(existingPerson.id, newPerson)
           .then(returnedPerson => {
-            setPersons(persons.filter(p => p.id !== existingPerson.id)
-                              .concat(returnedPerson))
+            const newPersons =  persons.filter(p => p.id !== existingPerson.id)
+                                        .concat(returnedPerson)
+            setPersons(newPersons)
+            showMessage(true, `Updated ${newPerson.name}`)
           })
       }
 
@@ -53,6 +63,7 @@ const App = () => {
       .then(returnedPerson => {
         setNewPerson({ name: '', number: '' })
         setPersons([...persons, returnedPerson])
+        showMessage(true, `Added ${newPerson.name}`)
       })
   }
   
@@ -73,6 +84,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter searchText={searchText} onChange={(event) => setSearchText(event.target.value)} />
       <h2>add a new </h2>
       <PersonForm newPerson={newPerson} 
@@ -82,7 +94,6 @@ const App = () => {
 
       <h2>Numbers</h2>
       <Persons persons={personsToShow} onDelete={onDelete} />
-      {/* <div>debug: {newName}</div> */}
     </div>
   )
 }
