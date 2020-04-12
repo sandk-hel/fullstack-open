@@ -11,6 +11,10 @@ const App = () => {
     return country.name.toLowerCase().includes(searchText.toLowerCase())
   })
 
+  const showDetail = (country) => () => {
+    setSearchText(country.name)
+  }
+
   const handleSearchTextChange = (event) => {
     setSearchText(event.target.value)
   }
@@ -25,7 +29,7 @@ const App = () => {
 
   return (<div>
     <Filter searchText={searchText} onChange={handleSearchTextChange} />
-    <SearchResult countries={countriesToShow} />
+    <SearchResult countries={countriesToShow} showDetail={showDetail} />
   </div>
   )
 }
