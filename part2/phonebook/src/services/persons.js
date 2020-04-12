@@ -12,4 +12,8 @@ let create = newPerson => {
             .then(response => response.data)
 }
 
-export default { getAll, create } 
+let remove = id => {
+    return axios.delete(`/persons/${id}`)
+}
+
+export default { getAll, create, remove } 
