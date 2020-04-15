@@ -68,6 +68,8 @@ const App = () => {
         setNewPerson({ name: '', number: '' })
         setPersons([...persons, returnedPerson])
         showMessage(true, `Added ${newPerson.name}`)
+      }).catch(error => {
+        showMessage(false, error.response.data.error)
       })
   }
   
