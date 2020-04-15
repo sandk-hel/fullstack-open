@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
@@ -9,7 +9,7 @@ const App = () => {
   const [persons, setPersons] = useState([])
   const [searchText, setSearchText] = useState('')
   const [newPerson, setNewPerson] = useState({ name: '', number: '' })
-  const [message, setMessage] = useState({isSuccess: true, text: null})
+  const [message, setMessage] = useState({ isSuccess: true, text: null })
 
   useEffect(() => {
     personService
@@ -32,9 +32,9 @@ const App = () => {
   }
 
   const showMessage = (isSuccess, text) => {
-    setMessage({isSuccess: isSuccess, text: text})
+    setMessage({ isSuccess: isSuccess, text: text })
     setTimeout(() => {
-      setMessage({...message, text: null})
+      setMessage({ ...message, text: null })
     }, 5000)
   }
 
@@ -48,14 +48,14 @@ const App = () => {
           .update(existingPerson.id, newPerson)
           .then(returnedPerson => {
             const newPersons =  persons.filter(p => p.id !== existingPerson.id)
-                                        .concat(returnedPerson)
+              .concat(returnedPerson)
             setPersons(newPersons)
             showMessage(true, `Updated ${newPerson.name}`)
           })
           .catch(() => {
             setPersons(persons.filter(person => person.id !== existingPerson.id))
             showMessage(false, `Information of ${newPerson.name} has already been removed from server`)
-          }) 
+          })
       }
 
       setNewPerson({ name: '', number: '' })
@@ -72,7 +72,7 @@ const App = () => {
         showMessage(false, error.response.data.error)
       })
   }
-  
+
   const onDelete = id => () => {
     const person = persons.find(p => p.id === id)
     if(!window.confirm(`Delete ${person.name}`)) {
@@ -98,10 +98,10 @@ const App = () => {
       <Notification message={message} />
       <Filter searchText={searchText} onChange={(event) => setSearchText(event.target.value)} />
       <h2>add a new </h2>
-      <PersonForm newPerson={newPerson} 
-                  addNewPerson={addNewPerson} 
-                  handleNameChange={handleNameChange}
-                  handlePhoneChange={handlePhoneChange} />
+      <PersonForm newPerson={newPerson}
+        addNewPerson={addNewPerson}
+        handleNameChange={handleNameChange}
+        handlePhoneChange={handlePhoneChange} />
 
       <h2>Numbers</h2>
       <Persons persons={personsToShow} onDelete={onDelete} />

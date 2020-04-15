@@ -1,9 +1,9 @@
 import React from 'react'
 
 const Filter = ({ searchText, onChange }) => (
-    <div>
+  <div>
         filter shown with <input value={searchText} onChange={onChange} />
-    </div>
+  </div>
 )
 
 export default Filter
