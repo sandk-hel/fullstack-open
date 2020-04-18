@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -13,11 +14,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [notification, setNotification] = useState({ text: null })
-  
+
   const blogFormRef = React.createRef()
 
   const handleLogin = async (event) => {
@@ -40,25 +38,20 @@ const App = () => {
     setUser(null)
   }
 
-  const submitBlog = async (event) => {
-    event.preventDefault()
+  const createBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility()
-
     try {
-      const savedBlog = await blogService.create({ title, author, url })
+      const savedBlog = await blogService.create(newBlog)
       setBlogs([...blogs, savedBlog])
-      const message = `a new blog \`${savedBlog.title}\` by ${author} added`
+      const message = `a new blog \`${savedBlog.title}\` by ${savedBlog.author} added`
       showNotification(message, true)
     } catch (exception) {
       console.log('Error occurred: ', exception)
     }
-    setTitle('')
-    setAuthor('')
-    setUrl('')
   }
 
   const showNotification = (message, isSuccess) => {
-    console.log('Showing notification ', message, ' ', isSuccess )
+    console.log('Showing notification ', message, ' ', isSuccess)
     setNotification({ text: message, isSuccess })
     setTimeout(() => {
       setNotification({ text: null })
@@ -66,55 +59,30 @@ const App = () => {
   }
 
   const blogList = () => {
-    return  (
-    <div>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </div>
+    return (
+      <div>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+        )}
+      </div>
     )
   }
 
   const blogForm = () => {
     return (
-      <Togglable buttonTitle='new note' ref={blogFormRef}>
-        <h2>create new</h2>
-        <form onSubmit={submitBlog}>
-          <div>
-            <label>title</label>
-            <input 
-              name='title' 
-              value={title}
-              onChange={({ target }) => setTitle(target.value)} 
-              />
-          </div>
-
-          <div>
-            <label>author</label>
-            <input 
-              name='author'
-              value={author}
-              onChange={({ target }) => setAuthor(target.value)} />
-          </div>
-
-          <div>
-            <label>url</label>
-            <input 
-              name='url'
-              value={url} 
-              onChange={({ target }) => setUrl(target.value)}
-              />
-          </div>
-
-          <div>
-            <button type='submit'>create</button>
-          </div>
-
-        </form>
-      </Togglable>
+      <div>
+        <p>
+          {user.name} logged in
+          <button onClick={handleLogout}>logout</button>
+        </p>
+        <Togglable buttonTitle='new blog' ref={blogFormRef}>
+          <BlogForm createBlog={createBlog} />
+        </Togglable>
+        {blogList()}
+      </div>
     )
   }
-  const loginForm = () =>  {
+  const loginForm = () => {
     return (
       <div>
         <form onSubmit={handleLogin}>
@@ -147,32 +115,25 @@ const App = () => {
       setUser(loggedInUser)
     }
   }, [])
-  
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+      setBlogs(blogs)
+    )
   }, [])
 
   return (
     <div>
-    <h2>{user=== null 
-    ? 'log in to application'
-    : 'blogs'
-    }
-    </h2>
-    <Notification  notification={notification}/>
-    {user === null 
-    ? loginForm()
-    : (<div>
-        <p>
-          {user.name} logged in
-          <button onClick={handleLogout}>logout</button>
-        </p>
-        {blogForm()}
-        {blogList()}
-      </div>)
-    }
+      <h2>{user === null
+        ? 'log in to application'
+        : 'blogs'
+      }
+      </h2>
+      <Notification notification={notification} />
+      {user === null
+        ? loginForm()
+        : blogForm()
+      }
     </div>
   )
 }
