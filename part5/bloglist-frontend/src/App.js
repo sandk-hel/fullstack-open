@@ -4,6 +4,7 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import userDetailStorage from './services/userDetailStorage'
+import Togglable from './components/Togglable'
 
 
 const App = () => {
@@ -17,6 +18,8 @@ const App = () => {
   const [url, setUrl] = useState('')
   const [notification, setNotification] = useState({ text: null })
   
+  const blogFormRef = React.createRef()
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -39,6 +42,8 @@ const App = () => {
 
   const submitBlog = async (event) => {
     event.preventDefault()
+    blogFormRef.current.toggleVisibility()
+
     try {
       const savedBlog = await blogService.create({ title, author, url })
       setBlogs([...blogs, savedBlog])
@@ -72,7 +77,7 @@ const App = () => {
 
   const blogForm = () => {
     return (
-      <div>
+      <Togglable buttonTitle='new note' ref={blogFormRef}>
         <h2>create new</h2>
         <form onSubmit={submitBlog}>
           <div>
@@ -106,7 +111,7 @@ const App = () => {
           </div>
 
         </form>
-      </div>
+      </Togglable>
     )
   }
   const loginForm = () =>  {
