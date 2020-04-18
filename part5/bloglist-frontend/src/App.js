@@ -18,6 +18,13 @@ const App = () => {
 
   const blogFormRef = React.createRef()
 
+  const sortedBlogs = blogs.sort((b1, b2) => {
+    if (b2.likes > b1.likes) {
+      return 1
+    }
+    return b2.likes == b1.likes ?  b1.title.localeCompare(b2.title) : -1
+  })
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -79,7 +86,7 @@ const App = () => {
   const blogList = () => {
     return (
       <div>
-        {blogs.map(blog =>
+        {sortedBlogs.map(blog =>
           <Blog key={blog.id} increaseLike={increaseLike} blog={blog} />
         )}
       </div>
