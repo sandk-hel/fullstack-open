@@ -38,6 +38,24 @@ const App = () => {
     setUser(null)
   }
 
+  const increaseLike = async (blog) => {
+    try {
+      const updatedBlog = { title: blog.title,
+                            author: blog.author,
+                            url: blog.url, 
+                            id: blog.id,
+                            user: blog.user.id,
+                            likes: blog.likes  + 1 }
+      const returnedObject = await blogService.update(updatedBlog)
+      const index = blogs.findIndex(obj => obj.id == returnedObject.id)
+      const clonedBlogs = [...blogs]
+      clonedBlogs[index] = returnedObject
+      setBlogs(clonedBlogs)
+    } catch (exception) {
+      console.log('Error occurred ', exception)
+    }
+  }
+
   const createBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility()
     try {
@@ -62,7 +80,7 @@ const App = () => {
     return (
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} increaseLike={increaseLike} blog={blog} />
         )}
       </div>
     )

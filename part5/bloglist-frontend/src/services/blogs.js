@@ -12,6 +12,13 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
+const update = async (updatedBlog) => {
+  console.log('Updating blog ', updatedBlog)
+  const url = `${baseUrl}/${updatedBlog.id}`
+  const response = await axios.put(url, updatedBlog)
+  return response.data
+}
+
 const create = async (attributes) => {
   const configuration = {
     headers: { Authorization: token }
@@ -23,5 +30,6 @@ const create = async (attributes) => {
 export default { 
   getAll,
   create,
-  setToken
+  setToken,
+  update
 }
