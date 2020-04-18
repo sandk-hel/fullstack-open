@@ -13,7 +13,6 @@ const getAll = () => {
 }
 
 const update = async (updatedBlog) => {
-  console.log('Updating blog ', updatedBlog)
   const url = `${baseUrl}/${updatedBlog.id}`
   const response = await axios.put(url, updatedBlog)
   return response.data
