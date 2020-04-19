@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, getByText } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import React from 'react'
 import Blog from './Blog'
@@ -41,5 +41,15 @@ describe('Blog Content rendered', () => {
     expect(container.querySelector('.detail-content'))
     .not
     .toBeInTheDocument()
+  })
+
+  test('show url and number of likes after clicking view button', () => {
+    const container = component.container
+    const button = getByText(container, 'view')
+    fireEvent.click(button)
+
+    expect(container.textContent).toMatch(/http:\/\/google.com\/test-blog-url/)
+    expect(container.textContent).toMatch(/likes 152/)
+    expect(container.querySelector('.detail-content')).toBeInTheDocument()
   })
 })
