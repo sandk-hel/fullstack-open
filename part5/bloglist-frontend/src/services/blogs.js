@@ -34,7 +34,7 @@ const remove = async (id) => {
   await axios.delete(url, configuration)
 }
 
-export default { 
+export default {
   getAll,
   create,
   setToken,

@@ -47,11 +47,11 @@ const App = () => {
   const increaseLike = async (blog) => {
     try {
       const updatedBlog = { title: blog.title,
-                            author: blog.author,
-                            url: blog.url, 
-                            id: blog.id,
-                            user: blog.user.id,
-                            likes: blog.likes  + 1 }
+        author: blog.author,
+        url: blog.url,
+        id: blog.id,
+        user: blog.user.id,
+        likes: blog.likes  + 1 }
       const returnedObject = await blogService.update(updatedBlog)
       const index = blogs.findIndex(obj => obj.id === returnedObject.id)
       const clonedBlogs = [...blogs]

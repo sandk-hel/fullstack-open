@@ -37,8 +37,8 @@ const Blog = ({ blog, increaseLike, deleteBlog }) => {
       <div>
         {blog.user.name}
       </div>
-      {deleteBlog === null 
-        ? "" 
+      {deleteBlog === null
+        ? ''
         : <button onClick={() => deleteBlog(blog) }>remove</button>}
     </div>
   </div>

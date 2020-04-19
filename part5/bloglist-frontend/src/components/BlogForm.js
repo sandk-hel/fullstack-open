@@ -57,6 +57,6 @@ const BlogForm = ({ createBlog }) => {
 
 BlogForm.propTypes = {
   createBlog: PropTypes.func
-};
+}
 
 export default BlogForm
