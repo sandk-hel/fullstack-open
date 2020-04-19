@@ -52,4 +52,20 @@ describe('Blog Content rendered', () => {
     expect(container.textContent).toMatch(/likes 152/)
     expect(container.querySelector('.detail-content')).toBeInTheDocument()
   })
+
+  test('show clicking like button twice props event is received', () => {
+    const container = component.container
+    const viewButton = getByText(container, 'view')
+    fireEvent.click(viewButton)
+
+    const detailContainer = container.querySelector('.detail-content')
+
+    const likeButton = getByText(detailContainer, 'like')
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+
+    expect(increaseLike.mock.calls).toHaveLength(2)
+    expect(increaseLike.mock.calls[0][0]).toEqual(blogContent)
+    expect(increaseLike.mock.calls[1][0]).toEqual(blogContent)
+  })
 })
