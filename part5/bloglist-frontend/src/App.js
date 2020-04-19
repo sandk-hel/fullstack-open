@@ -22,7 +22,7 @@ const App = () => {
     if (b2.likes > b1.likes) {
       return 1
     }
-    return b2.likes == b1.likes ?  b1.title.localeCompare(b2.title) : -1
+    return b2.likes === b1.likes ?  b1.title.localeCompare(b2.title) : -1
   })
 
   const handleLogin = async (event) => {
@@ -35,7 +35,6 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log('Exception triggered')
       showNotification('wrong username or password', false)
     }
   }
@@ -54,12 +53,29 @@ const App = () => {
                             user: blog.user.id,
                             likes: blog.likes  + 1 }
       const returnedObject = await blogService.update(updatedBlog)
-      const index = blogs.findIndex(obj => obj.id == returnedObject.id)
+      const index = blogs.findIndex(obj => obj.id === returnedObject.id)
       const clonedBlogs = [...blogs]
       clonedBlogs[index] = returnedObject
       setBlogs(clonedBlogs)
     } catch (exception) {
       console.log('Error occurred ', exception)
+    }
+  }
+
+  const deleteBlog = async (blog) => {
+    const message = `Remove blog \`${blog.title}\` by ${blog.author}`
+    const confirmedDeletion = window.confirm(message)
+    if (!confirmedDeletion) {
+      return
+    }
+
+    try {
+      await blogService.remove(blog.id)
+      const notification = `Blog \`${blog.title}\` removed`
+      setBlogs(blogs.filter(b => b.id !== blog.id))
+      showNotification(notification, true)
+    } catch (exception) {
+      console.log(exception)
     }
   }
 
@@ -83,11 +99,16 @@ const App = () => {
     }, 5000)
   }
 
+  const canDelete = (blog) => {
+    const isDeletable = user.username === blog.user.username
+    return isDeletable
+  }
+
   const blogList = () => {
     return (
       <div>
         {sortedBlogs.map(blog =>
-          <Blog key={blog.id} increaseLike={increaseLike} blog={blog} />
+          <Blog key={blog.id} increaseLike={increaseLike} blog={blog} deleteBlog={ canDelete(blog) ? deleteBlog : null } />
         )}
       </div>
     )
