@@ -31,3 +31,14 @@ Cypress.Commands.add('createUser', ({ name, username, password  }) => {
     body: { name, username, password }
   })
 })
+
+Cypress.Commands.add('login', ({ username, password }) => {
+  cy.request({
+    url: '/api/login',
+    method: 'POST',
+    body: { username, password }
+  }).then(({ body }) => {
+    localStorage.setItem('BlogListAppUserKey', JSON.stringify(body))
+    cy.visit('http://localhost:3000')
+  })
+})
