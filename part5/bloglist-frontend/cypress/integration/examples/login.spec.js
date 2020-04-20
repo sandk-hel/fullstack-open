@@ -41,7 +41,7 @@ describe('Blog app', function() {
       cy.contains('Sandeep Koirala logged in').should('not.exist')
     })
 
-    describe.only('When logged in', function() {
+    describe('When logged in', function() {
       beforeEach(function() {
         cy.login({ username: 'k6sandeep', password: 'TestSekret1' })
       })
@@ -55,6 +55,34 @@ describe('Blog app', function() {
         
         cy.get('.success').contains('a new blog `Test blog title` by Example Test Author added')
         cy.get('.main-content').contains('Test blog title Example Test Author')
+      })
+
+      describe('Blog', function() {
+        beforeEach(function() {
+          cy.addBlog({title: 'Test blog', 
+          author: 'Example Author', 
+          url: 'http://example.com/test-blog' })
+        })
+
+        it('A blog can be liked', function() {
+          cy.visit('http://localhost:3000')
+          cy.get('.main-content')
+            .as('main-content')
+            .contains('view')
+            .click()
+
+          cy.get('.detail-content')
+            .contains('likes 0')
+            .contains('like')
+            .click()
+            .parent()
+            .contains('likes 1')
+            .contains('like')
+            .click()
+            .parent()
+            .contains('likes 2')
+        })
+
       })
     })
   })
