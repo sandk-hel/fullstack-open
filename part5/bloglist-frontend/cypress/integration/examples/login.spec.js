@@ -57,7 +57,7 @@ describe('Blog app', function() {
         cy.get('.main-content').contains('Test blog title Example Test Author')
       })
 
-      describe('Blog', function() {
+      describe.only('Blog', function() {
         beforeEach(function() {
           cy.addBlog({title: 'Test blog', 
           author: 'Example Author', 
@@ -65,7 +65,6 @@ describe('Blog app', function() {
         })
 
         it('A blog can be liked', function() {
-          cy.visit('http://localhost:3000')
           cy.get('.main-content')
             .as('main-content')
             .contains('view')
@@ -81,8 +80,57 @@ describe('Blog app', function() {
             .click()
             .parent()
             .contains('likes 2')
+            .parent()
+            // Note that remove can be seen for this user
+            .contains('remove')
         })
 
+        describe('Deleting', function() {
+          beforeEach(function() {
+            cy.createUser({name: 'Sabina Koirala', 
+            username: 'sbnkrl', 
+            password: 'SekretSabina'})
+            cy.login({username: 'sbnkrl', password: 'SekretSabina'})
+            cy.addBlog({'title': 'Sabina\'s blog', author: 'Test author 2', url: 'http://example.com/sabina/blog'})
+          })
+
+          it('does not show remove button for other user blog', function() {
+            // Blog created by other user
+            cy.get('.main-content')
+              .contains('Test blog Example Author')
+              .parent()
+              .as('main-content')
+              
+            cy.get('@main-content')
+              .contains('view')
+              .click()
+
+            // Does not have remove button
+            cy.get('@main-content')
+              .contains('remove')
+              .should('not.exist')
+          })
+          
+          it('show remove button for own blog and is possible to delete', function() {
+            cy.get('.main-content')
+              .contains('Sabina\'s blog Test author 2')
+              .parent()
+              .as('main-content')
+
+            cy.get('@main-content')
+              .contains('view')
+              .click()
+
+            cy.get('@main-content')
+              .contains('remove')
+              .click()
+            
+            cy.get('.success').contains('Blog \`Sabina\'s blog\` removed')
+            cy.get('.main-content')
+              .contains('Sabina\'s blog Test author 2')
+              .should('not.exist')
+          })
+        })
       })
     })
   })

@@ -51,5 +51,12 @@ Cypress.Commands.add('addBlog', ({ title, author, url }) => {
     headers: {
       'Authorization': `bearer ${JSON.parse(localStorage.getItem('BlogListAppUserKey')).token}`
     }
+  }).then(() => {
+    cy.visit('http://localhost:3000')
   })
+})
+
+Cypress.Commands.add('logout', () => {
+  localStorage.removeItem('BlogListAppUserKey')
+  cy.visit('http://localhost:3000')
 })
