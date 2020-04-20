@@ -10,4 +10,36 @@ describe('Blog app', function() {
     cy.get('input#password')
     cy.get('button').contains('login')
   })
+
+  describe('Login', function() {
+    beforeEach(function() {
+      cy.createUser({name: 'Sandeep Koirala', 
+                  username: 'k6sandeep', 
+                  password: 'TestSekret1'})
+    })
+
+    it('succeeds with correct credentials', function() {
+      cy.get('input#username').type('k6sandeep')
+      cy.get('input#password').type('TestSekret1')
+      cy.get('button#login').click()
+
+      cy.get('input#username').should('not.exist')
+      cy.get('input#password').should('not.exist')
+      cy.get('button#login').should('not.exist')
+
+      cy.contains('blogs')
+      cy.contains('logout')
+      cy.contains('Sandeep Koirala logged in')
+    })
+
+    it('fails with wrong credentials', function() {
+      cy.get('input#username').type('k6sandeep')
+      cy.get('input#password').type('TestSekret')
+      cy.get('button#login').click()
+
+      cy.get('.error').contains('wrong username or password')
+      cy.contains('Sandeep Koirala logged in').should('not.exist')
+    })
+  })
+
 })
