@@ -57,7 +57,7 @@ describe('Blog app', function() {
         cy.get('.main-content').contains('Test blog title Example Test Author')
       })
 
-      describe.only('Blog', function() {
+      describe('Blog', function() {
         beforeEach(function() {
           cy.addBlog({title: 'Test blog', 
           author: 'Example Author', 
@@ -130,6 +130,35 @@ describe('Blog app', function() {
               .contains('Sabina\'s blog Test author 2')
               .should('not.exist')
           })
+        })
+      })
+
+      describe('blog ordering', function() {
+        beforeEach(function() {
+          cy.login({ username: 'k6sandeep', password: 'TestSekret1' })
+          cy.addBlog({'title': 'Blog with 10 likes', author: 'Test author', url: 'http://localhost.com', likes: 10})
+          cy.addBlog({'title': 'Blog with 3 likes', author: 'Test author', url: 'http://localhost.com', likes: 3})
+          cy.addBlog({'title': 'Blog with 12 likes', author: 'Test author', url: 'http://localhost.com', likes: 12})
+          cy.addBlog({'title': 'Blog with 5 likes', author: 'Test author', url: 'http://localhost.com', likes: 5})
+          cy.addBlog({'title': 'Blog with 4 likes', author: 'Test author', url: 'http://localhost.com', likes: 4})
+          cy.addBlog({'title': 'Blog with 0 likes', author: 'Test author', url: 'http://localhost.com'})
+        })
+
+        it('should order blogs', function() {
+          // Notice that the likes are ordered with child indexes
+          // ie. at 1 => 12 likes, at 2 => 10 likes and so on
+          cy.get('div:nth-child(3) > div:nth-child(1)')
+            .contains('Blog with 12 likes')
+          cy.get('div:nth-child(3) > div:nth-child(2)')
+            .contains('Blog with 10 likes')
+          cy.get('div:nth-child(3) > div:nth-child(3)')
+            .contains('Blog with 5 likes')
+          cy.get('div:nth-child(3) > div:nth-child(4)')
+            .contains('Blog with 4 likes')
+          cy.get('div:nth-child(3) > div:nth-child(5)')
+            .contains('Blog with 3 likes')
+          cy.get('div:nth-child(3) > div:nth-child(6)')
+            .contains('Blog with 0 likes')
         })
       })
     })
