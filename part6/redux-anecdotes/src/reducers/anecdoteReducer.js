@@ -10,8 +10,9 @@ const reducer = (state = [], action) => {
     case 'ADD_NEW':
       const anecdoteObject = action.data
       return [anecdoteObject, ...state]
+   default:
+      return state
   }
-  return state
 }
 
 export const addVote = (anecdote) => {
