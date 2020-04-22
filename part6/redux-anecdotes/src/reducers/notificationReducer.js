@@ -1,5 +1,7 @@
 const initialNotification = 'Welcome to anecdotes!'
 
+let timeoutID = null
+
 const notificationReducer = (state = initialNotification, action) => {
   switch (action.type) {
     case 'SHOW_NOTIFICATION':
@@ -12,13 +14,15 @@ const notificationReducer = (state = initialNotification, action) => {
 }
 
 export const setNotification = (message, time) => {
+  clearInterval(timeoutID)
+
   return async dispatch => {
     dispatch({
       type: 'SHOW_NOTIFICATION',
       message
     })
 
-    setTimeout(() => {
+    timeoutID = setTimeout(() => {
       dispatch({
         type: 'HIDE_NOTIFICATION'
       })
