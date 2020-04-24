@@ -12,7 +12,7 @@ const useField = (type) => {
     setValue('')
   }
 
-  return { value, type, onChange, reset }
+  return { attrs: { value, type, onChange }, reset }
 }
 
 export { useField }
