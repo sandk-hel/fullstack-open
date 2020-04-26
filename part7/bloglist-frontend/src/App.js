@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -7,6 +9,8 @@ import loginService from './services/login'
 import userDetailStorage from './services/userDetailStorage'
 import Togglable from './components/Togglable'
 
+import { showNotification, 
+          hideNotification } from './reducers/notifications'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -14,7 +18,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const [notification, setNotification] = useState({ text: null })
+  const notification = useSelector(state => state)
+  const dispatch = useDispatch()
 
   const blogFormRef = React.createRef()
 
@@ -35,7 +40,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      showNotification('wrong username or password', false)
+      displayNotification('wrong username or password', false)
     }
   }
 
@@ -73,7 +78,7 @@ const App = () => {
       await blogService.remove(blog.id)
       const notification = `Blog \`${blog.title}\` removed`
       setBlogs(blogs.filter(b => b.id !== blog.id))
-      showNotification(notification, true)
+      displayNotification(notification, true)
     } catch (exception) {
       console.log(exception)
     }
@@ -85,17 +90,16 @@ const App = () => {
       const savedBlog = await blogService.create(newBlog)
       setBlogs([...blogs, savedBlog])
       const message = `a new blog \`${savedBlog.title}\` by ${savedBlog.author} added`
-      showNotification(message, true)
+      displayNotification(message, true)
     } catch (exception) {
       console.log('Error occurred: ', exception)
     }
   }
 
-  const showNotification = (message, isSuccess) => {
-    console.log('Showing notification ', message, ' ', isSuccess)
-    setNotification({ text: message, isSuccess })
+  const displayNotification = (message, isSuccess) => {
+    dispatch(showNotification(message, isSuccess))
     setTimeout(() => {
-      setNotification({ text: null })
+      dispatch(hideNotification())
     }, 5000)
   }
 
