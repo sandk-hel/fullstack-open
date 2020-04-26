@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -63,8 +62,7 @@ const App = () => {
                             id: blog.id,
                             user: blog.user.id,
                             likes: blog.likes  + 1 }
-      const returnedObject = await blogService.update(updatedBlog)
-      dispatch(update(returnedObject))
+      dispatch(update(updatedBlog))
     } catch (exception) {
       console.log('Error occurred ', exception)
     }
@@ -78,9 +76,8 @@ const App = () => {
     }
 
     try {
-      await blogService.remove(blog.id)
-      const notification = `Blog \`${blog.title}\` removed`
       dispatch(remove(blog.id))
+      const notification = `Blog \`${blog.title}\` removed`
       displayNotification(notification, true)
     } catch (exception) {
       console.log(exception)
@@ -90,9 +87,8 @@ const App = () => {
   const createBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility()
     try {
-      const savedBlog = await blogService.create(newBlog)
-      dispatch(createNew(savedBlog))
-      const message = `a new blog \`${savedBlog.title}\` by ${savedBlog.author} added`
+      dispatch(createNew(newBlog))
+      const message = `a new blog \`${newBlog.title}\` by ${newBlog.author} added`
       displayNotification(message, true)
     } catch (exception) {
       console.log('Error occurred: ', exception)
@@ -170,9 +166,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      dispatch(initialize(blogs))
-    )
+    dispatch(initialize())
   }, [])
 
   return (
