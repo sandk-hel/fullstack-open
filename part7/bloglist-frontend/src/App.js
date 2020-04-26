@@ -3,13 +3,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
-import blogService from './services/blogs'
-import loginService from './services/login'
-import userDetailStorage from './services/userDetailStorage'
 import Togglable from './components/Togglable'
 
-import { showNotification, 
-          hideNotification } from './reducers/notifications'
+import { showNotification } from './reducers/notifications'
 import {
   update,
   remove,
@@ -17,13 +13,16 @@ import {
   initialize
 } from './reducers/blogs'
 
+import { logIn, loadUser, logOut } from './reducers/loggedInUser'
+
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
+  const user = useSelector(state => state.loggedInUser)
+
   const dispatch = useDispatch()
 
   const blogFormRef = React.createRef()
@@ -32,40 +31,30 @@ const App = () => {
     if (b2.likes > b1.likes) {
       return 1
     }
-    return b2.likes === b1.likes ?  b1.title.localeCompare(b2.title) : -1
+    return b2.likes === b1.likes ? b1.title.localeCompare(b2.title) : -1
   })
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    try {
-      const user = await loginService.login({ username, password })
-      userDetailStorage.storeUser(user)
-      setUser(user)
-      blogService.setToken(user.token)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      displayNotification('wrong username or password', false)
-    }
+    dispatch(logIn({ username, password }))
+    setUsername('')
+    setPassword('')
   }
 
   const handleLogout = () => {
-    userDetailStorage.removeUser()
-    setUser(null)
+    dispatch(logOut())
   }
 
   const increaseLike = async (blog) => {
-    try {
-      const updatedBlog = { title: blog.title,
-                            author: blog.author,
-                            url: blog.url, 
-                            id: blog.id,
-                            user: blog.user.id,
-                            likes: blog.likes  + 1 }
-      dispatch(update(updatedBlog))
-    } catch (exception) {
-      console.log('Error occurred ', exception)
+    const updatedBlog = {
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      id: blog.id,
+      user: blog.user.id,
+      likes: blog.likes + 1
     }
+    dispatch(update(updatedBlog))
   }
 
   const deleteBlog = async (blog) => {
@@ -74,32 +63,20 @@ const App = () => {
     if (!confirmedDeletion) {
       return
     }
-
-    try {
-      dispatch(remove(blog.id))
-      const notification = `Blog \`${blog.title}\` removed`
-      displayNotification(notification, true)
-    } catch (exception) {
-      console.log(exception)
-    }
+    dispatch(remove(blog.id))
+    const notification = `Blog \`${blog.title}\` removed`
+    displayNotification(notification, true)
   }
 
   const createBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility()
-    try {
-      dispatch(createNew(newBlog))
-      const message = `a new blog \`${newBlog.title}\` by ${newBlog.author} added`
-      displayNotification(message, true)
-    } catch (exception) {
-      console.log('Error occurred: ', exception)
-    }
+    dispatch(createNew(newBlog))
+    const message = `a new blog \`${newBlog.title}\` by ${newBlog.author} added`
+    displayNotification(message, true)
   }
 
   const displayNotification = (message, isSuccess) => {
     dispatch(showNotification(message, isSuccess))
-    setTimeout(() => {
-      dispatch(hideNotification())
-    }, 5000)
   }
 
   const canDelete = (blog) => {
@@ -111,7 +88,7 @@ const App = () => {
     return (
       <div>
         {sortedBlogs.map(blog =>
-          <Blog key={blog.id} increaseLike={increaseLike} blog={blog} deleteBlog={ canDelete(blog) ? deleteBlog : null } />
+          <Blog key={blog.id} increaseLike={increaseLike} blog={blog} deleteBlog={canDelete(blog) ? deleteBlog : null} />
         )}
       </div>
     )
@@ -158,11 +135,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    const loggedInUser = userDetailStorage.getUser()
-    if (loggedInUser) {
-      blogService.setToken(loggedInUser.token)
-      setUser(loggedInUser)
-    }
+    dispatch(loadUser())
   }, [])
 
   useEffect(() => {

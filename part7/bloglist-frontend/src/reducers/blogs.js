@@ -20,42 +20,63 @@ const blogsReducer = (state = [], action) => {
 
 export const createNew = (blog) => {
   return async dispatch => {
-    const savedBlog = await blogService.create(blog)
-    dispatch({
-      type: 'NEW_BLOG',
-      data: savedBlog
-    })
+    try {
+      const savedBlog = await blogService.create(blog)
+      dispatch({
+        type: 'NEW_BLOG',
+        data: savedBlog
+      })
+    } catch (exception) {
+      // Set notification ?
+      console.error('Error occurred: ', exception)
+    }
+
   }
 }
 
 export const update = (blog) => {
   return async dispatch => {
-    const updatedBlog = await blogService.update(blog)
-    dispatch({
-      type: 'UPDATE_BLOG',
-      id: updatedBlog.id,
-      data: updatedBlog
-    })
+    try {
+      const updatedBlog = await blogService.update(blog)
+      dispatch({
+        type: 'UPDATE_BLOG',
+        id: updatedBlog.id,
+        data: updatedBlog
+      })
+    } catch (exception) {
+      // Set notification ?
+      console.error('Error occurred: ', exception)
+    }
   }
 }
 
 export const remove = (id) => {
   return async dispatch => {
-    await blogService.remove(id)
-    dispatch({
-      type: 'DELETE_BLOG',
-      id
-    })
+    try {
+      await blogService.remove(id)
+      dispatch({
+        type: 'DELETE_BLOG',
+        id
+      })
+    } catch (exception) {
+      // Set notification ?
+      console.error('Error occurred: ', exception)
+    }
   }
 }
 
 export const initialize = () => {
   return async dispatch => {
-    const blogs = await blogService.getAll()
-    dispatch({
-      type: 'INITIALIZE',
-      data: blogs
-    })
+    try {
+
+      const blogs = await blogService.getAll()
+      dispatch({
+        type: 'INITIALIZE',
+        data: blogs
+      })
+    } catch (exception) {
+      console.error('Error occurred: ', exception)
+    }
   }
 }
 

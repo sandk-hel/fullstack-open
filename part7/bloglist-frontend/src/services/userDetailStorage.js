@@ -1,12 +1,12 @@
 
 const localStorageItemKey = 'BlogListAppUserKey'
 
-const storeUser = (user) => {
+export const storeUser = (user) => {
   let userString = JSON.stringify(user)
   window.localStorage.setItem(localStorageItemKey, userString)
 }
 
-const getUser = () => {
+export const getUser = () => {
   let userString = window.localStorage.getItem(localStorageItemKey)
   if (userString === null) {
     return null

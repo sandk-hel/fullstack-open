@@ -8,20 +8,16 @@ const notificationReducer = (state = emptyState, action) => {
     case 'HIDE_NOTIFICATION':
       return emptyState
     default:
-      return emptyState
+      return state
   }
 }
 
 export const showNotification = (text, isSuccess) => {
-  return {
-    type: 'SHOW_NOTIFICATION',
-    notification: { text, isSuccess }
-  }
-}
-
-export const hideNotification = message => {
-  return {
-    type: 'HIDE_NOTIFICATION'
+  return dispatch => {
+    dispatch({ type: 'SHOW_NOTIFICATION',
+               notification: { text, isSuccess } })
+    setTimeout(() => 
+      dispatch({ type: 'HIDE_NOTIFICATION' }), 10000)
   }
 }
 
