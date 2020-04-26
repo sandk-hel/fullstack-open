@@ -11,14 +11,20 @@ import Togglable from './components/Togglable'
 
 import { showNotification, 
           hideNotification } from './reducers/notifications'
+import {
+  update,
+  remove,
+  createNew,
+  initialize
+} from './reducers/blogs'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const notification = useSelector(state => state)
+  const blogs = useSelector(state => state.blogs)
+  const notification = useSelector(state => state.notification)
   const dispatch = useDispatch()
 
   const blogFormRef = React.createRef()
@@ -58,10 +64,7 @@ const App = () => {
                             user: blog.user.id,
                             likes: blog.likes  + 1 }
       const returnedObject = await blogService.update(updatedBlog)
-      const index = blogs.findIndex(obj => obj.id === returnedObject.id)
-      const clonedBlogs = [...blogs]
-      clonedBlogs[index] = returnedObject
-      setBlogs(clonedBlogs)
+      dispatch(update(returnedObject))
     } catch (exception) {
       console.log('Error occurred ', exception)
     }
@@ -77,7 +80,7 @@ const App = () => {
     try {
       await blogService.remove(blog.id)
       const notification = `Blog \`${blog.title}\` removed`
-      setBlogs(blogs.filter(b => b.id !== blog.id))
+      dispatch(remove(blog.id))
       displayNotification(notification, true)
     } catch (exception) {
       console.log(exception)
@@ -88,7 +91,7 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try {
       const savedBlog = await blogService.create(newBlog)
-      setBlogs([...blogs, savedBlog])
+      dispatch(createNew(savedBlog))
       const message = `a new blog \`${savedBlog.title}\` by ${savedBlog.author} added`
       displayNotification(message, true)
     } catch (exception) {
@@ -168,7 +171,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      dispatch(initialize(blogs))
     )
   }, [])
 
