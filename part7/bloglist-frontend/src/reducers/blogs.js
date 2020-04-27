@@ -1,4 +1,5 @@
 import blogService from '../services/blogs'
+import { showNotification } from './notifications'
 
 const blogsReducer = (state = [], action) => {
   switch (action.type) {
@@ -33,6 +34,8 @@ export const createNew = (blog) => {
         type: 'NEW_BLOG',
         data: savedBlog
       })
+      const message = `a new blog \`${savedBlog.title}\` by ${savedBlog.author} added`
+      dispatch(showNotification(message, true))
     } catch (exception) {
       // Set notification ?
       console.error('Error occurred: ', exception)

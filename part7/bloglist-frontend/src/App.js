@@ -7,7 +7,6 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { Switch, Route, Link, useRouteMatch, Redirect } from 'react-router-dom'
 
-import { showNotification } from './reducers/notifications'
 import {
   update,
   createNew,
@@ -63,12 +62,6 @@ const App = () => {
   const createBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility()
     dispatch(createNew(newBlog))
-    const message = `a new blog \`${newBlog.title}\` by ${newBlog.author} added`
-    displayNotification(message, true)
-  }
-
-  const displayNotification = (message, isSuccess) => {
-    dispatch(showNotification(message, isSuccess))
   }
 
   const blogList = () => {
