@@ -1,45 +1,27 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, increaseLike, deleteBlog }) => {
-  const [visible, setVisible] = useState(false)
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
+const Blog = ({ blog, increaseLike }) => {
+  if (!blog) {
+    return <p>No blog found</p>
   }
-
-  const showsWhenVisible = { 'display': visible ? '' : 'none' }
-  const showsWhenHidden = { 'display': visible ? 'none' : '' }
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
-  }
-
-  return <div style={blogStyle}>
+  return <div>
     <div>
-      {blog.title} {blog.author}
-      <button style={showsWhenHidden} onClick={toggleVisibility}>view</button>
-      <button style={showsWhenVisible} onClick={toggleVisibility}>hide</button>
-
+      <h2>
+        {blog.title} {blog.author}
+      </h2>
     </div>
-    <div style={showsWhenVisible}>
+    <div>
       <div>
-        {blog.url}
+        <a href={blog.url} target="_">{blog.url}</a>
       </div>
       <div>
-        likes {blog.likes}
+      {blog.likes} likes
         <button onClick={() => increaseLike(blog) }>like</button>
       </div>
       <div>
         {blog.user.name}
       </div>
-      {deleteBlog === null 
-        ? "" 
-        : <button onClick={() => deleteBlog(blog) }>remove</button>}
     </div>
   </div>
 }

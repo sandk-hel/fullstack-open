@@ -5,7 +5,7 @@ import Users from './components/Users'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
 
 import { showNotification } from './reducers/notifications'
 import {
@@ -24,7 +24,7 @@ const App = () => {
   const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
   const user = useSelector(state => state.loggedInUser)
-  
+
   const dispatch = useDispatch()
 
   const blogFormRef = React.createRef()
@@ -59,17 +59,6 @@ const App = () => {
     dispatch(update(updatedBlog))
   }
 
-  const deleteBlog = async (blog) => {
-    const message = `Remove blog \`${blog.title}\` by ${blog.author}`
-    const confirmedDeletion = window.confirm(message)
-    if (!confirmedDeletion) {
-      return
-    }
-    dispatch(remove(blog.id))
-    const notification = `Blog \`${blog.title}\` removed`
-    displayNotification(notification, true)
-  }
-
   const createBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility()
     dispatch(createNew(newBlog))
@@ -81,16 +70,23 @@ const App = () => {
     dispatch(showNotification(message, isSuccess))
   }
 
-  const canDelete = (blog) => {
-    const isDeletable = user.username === blog.user.username
-    return isDeletable
-  }
-
   const blogList = () => {
+    const blogStyle = {
+      paddingTop: 10,
+      paddingLeft: 2,
+      border: 'solid',
+      borderWidth: 1,
+      marginBottom: 5
+    }
+  
     return (
       <div>
         {sortedBlogs.map(blog =>
-          <Blog key={blog.id} increaseLike={increaseLike} blog={blog} deleteBlog={canDelete(blog) ? deleteBlog : null} />
+          <div style={blogStyle} key={blog.id}>
+            <Link to={`/blogs/${blog.id}`} key={blog.id}>
+              {blog.title}
+            </Link>
+          </div>
         )}
       </div>
     )
@@ -134,11 +130,17 @@ const App = () => {
 
   useEffect(() => {
     dispatch(loadUser())
-  }, [ dispatch ])
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(initialize())
-  }, [ dispatch ])
+  }, [dispatch])
+
+  const match = useRouteMatch('/blogs/:id')
+
+  const blog = match
+    ? blogs.find(b => b.id === match.params.id)
+    : null
 
   return (
     <div>
@@ -157,6 +159,9 @@ const App = () => {
       <Switch>
         <Route path='/users'>
           <Users />
+        </Route>
+        <Route path='/blogs/:id'>
+          <Blog blog={blog} increaseLike={increaseLike} />
         </Route>
         <Route path='/'>
           {user === null
