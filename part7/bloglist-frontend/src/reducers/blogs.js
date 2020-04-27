@@ -12,6 +12,13 @@ const blogsReducer = (state = [], action) => {
       return state.filter(blog => action.id !== blog.id)
     case 'INITIALIZE':
       return action.data
+    case 'ADD_COMMENT':
+      const blogId = action.data.blog
+      return state.map(blog => (
+         blog.id === blogId 
+          ? { ...blog, comments: [ ...blog.comments, action.data ] }
+          : blog
+      ))
 
     default:
       return state
@@ -31,6 +38,20 @@ export const createNew = (blog) => {
       console.error('Error occurred: ', exception)
     }
 
+  }
+}
+
+export const addComment = (blogId, comment) => {
+  return async dispatch => {
+    try {
+      const savedComment = await blogService.addComment(blogId, comment)
+      dispatch({
+        type: 'ADD_COMMENT',
+        data: savedComment
+      })
+    } catch (exception) {
+      console.log('Error occurred: ', exception)
+    }
   }
 }
 

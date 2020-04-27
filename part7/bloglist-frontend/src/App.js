@@ -11,7 +11,8 @@ import { showNotification } from './reducers/notifications'
 import {
   update,
   createNew,
-  initialize
+  initialize,
+  addComment
 } from './reducers/blogs'
 
 import { logIn, loadUser, logOut } from './reducers/loggedInUser'
@@ -47,7 +48,7 @@ const App = () => {
     dispatch(logOut())
   }
 
-  const increaseLike = async (blog) => {
+  const likeBlog = async (blog) => {
     const updatedBlog = {
       title: blog.title,
       author: blog.author,
@@ -138,6 +139,10 @@ const App = () => {
 
   const match = useRouteMatch('/blogs/:id')
 
+  const updateComment = (blogId, comment) => {
+    dispatch(addComment(blogId, comment))
+  }
+
   const blog = match
     ? blogs.find(b => b.id === match.params.id)
     : null
@@ -154,7 +159,7 @@ const App = () => {
         { user === null ? loginForm() : <Users /> }
         </Route>
         <Route path='/blogs/:id'>
-          <Blog blog={blog} increaseLike={increaseLike} />
+          <Blog blog={blog} likeBlog={likeBlog}  addComment={(comment) => updateComment(blog.id, comment)} />
         </Route>
         <Route path='/'>
           { user === null ? loginForm() : blogForm() }

@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Comments from './Comments'
 
-const Blog = ({ blog, increaseLike }) => {
+const Blog = ({ blog, likeBlog,  addComment }) => {
   if (!blog) {
     return <p>No blog found</p>
   }
@@ -17,28 +18,18 @@ const Blog = ({ blog, increaseLike }) => {
       </div>
       <div>
       {blog.likes} likes
-        <button onClick={() => increaseLike(blog) }>like</button>
+        <button onClick={() => likeBlog(blog) }>like</button>
       </div>
       <div>
         {blog.user.name}
       </div>
     </div>
-    {blog.comments.length == 0 
-    ? <p>No comments yet</p>
-    : 
-    <>
-    <h2>Comments</h2>
-    <ul>
-    {blog.comments.map(comment => (
-      <li key={comment.id}>{comment.text}</li>))}
-    </ul>
-    </>
-    }
+    <Comments comments={blog.comments} addComment={addComment} />
   </div>
 }
 
 Blog.prototypes = {
-  increaseLike: PropTypes.func.isRequired,
+  likeBlog: PropTypes.func.isRequired,
   deleteBlog: PropTypes.func.isRequired,
   blog: PropTypes.string.isRequired
 }
