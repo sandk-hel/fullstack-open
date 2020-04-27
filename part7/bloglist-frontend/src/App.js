@@ -5,17 +5,17 @@ import Users from './components/Users'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, Link, useRouteMatch, Redirect } from 'react-router-dom'
 
 import { showNotification } from './reducers/notifications'
 import {
   update,
-  remove,
   createNew,
   initialize
 } from './reducers/blogs'
 
 import { logIn, loadUser, logOut } from './reducers/loggedInUser'
+import Navigation from './components/Navigation'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -142,32 +142,22 @@ const App = () => {
     ? blogs.find(b => b.id === match.params.id)
     : null
 
-  return (
+    return (
     <div>
       {user === null
         ? <h2>log in to application</h2>
-        :
-        <div>
-          <h2>blogs</h2>
-          <p>
-            {user.name} logged in
-          </p>
-          <button onClick={handleLogout}>logout</button>
-        </div>
+        : <Navigation user={user} handleLogout={handleLogout} />
       }
       <Notification notification={notification} />
       <Switch>
         <Route path='/users'>
-          <Users />
+        { user === null ? loginForm() : <Users /> }
         </Route>
         <Route path='/blogs/:id'>
           <Blog blog={blog} increaseLike={increaseLike} />
         </Route>
         <Route path='/'>
-          {user === null
-            ? loginForm()
-            : blogForm()
-          }
+          { user === null ? loginForm() : blogForm() }
         </Route>
       </Switch>
     </div>
