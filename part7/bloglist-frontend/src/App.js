@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Blog from './components/Blog'
+import Users from './components/Users'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import { Switch, Route } from 'react-router-dom'
 
 import { showNotification } from './reducers/notifications'
 import {
@@ -22,7 +24,7 @@ const App = () => {
   const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
   const user = useSelector(state => state.loggedInUser)
-
+  
   const dispatch = useDispatch()
 
   const blogFormRef = React.createRef()
@@ -97,10 +99,6 @@ const App = () => {
   const blogForm = () => {
     return (
       <div>
-        <p>
-          {user.name} logged in
-          <button onClick={handleLogout}>logout</button>
-        </p>
         <Togglable buttonTitle='create new blog' ref={blogFormRef}>
           <BlogForm createBlog={createBlog} />
         </Togglable>
@@ -144,16 +142,29 @@ const App = () => {
 
   return (
     <div>
-      <h2>{user === null
-        ? 'log in to application'
-        : 'blogs'
-      }
-      </h2>
-      <Notification notification={notification} />
       {user === null
-        ? loginForm()
-        : blogForm()
+        ? <h2>log in to application</h2>
+        :
+        <div>
+          <h2>blogs</h2>
+          <p>
+            {user.name} logged in
+          </p>
+          <button onClick={handleLogout}>logout</button>
+        </div>
       }
+      <Notification notification={notification} />
+      <Switch>
+        <Route path='/users'>
+          <Users />
+        </Route>
+        <Route path='/'>
+          {user === null
+            ? loginForm()
+            : blogForm()
+          }
+        </Route>
+      </Switch>
     </div>
   )
 }
