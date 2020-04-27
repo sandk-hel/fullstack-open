@@ -134,11 +134,11 @@ const App = () => {
 
   useEffect(() => {
     dispatch(loadUser())
-  }, [])
+  }, [ dispatch ])
 
   useEffect(() => {
     dispatch(initialize())
-  }, [])
+  }, [ dispatch ])
 
   return (
     <div>
