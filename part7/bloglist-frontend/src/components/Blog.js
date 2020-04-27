@@ -23,6 +23,17 @@ const Blog = ({ blog, increaseLike }) => {
         {blog.user.name}
       </div>
     </div>
+    {blog.comments.length == 0 
+    ? <p>No comments yet</p>
+    : 
+    <>
+    <h2>Comments</h2>
+    <ul>
+    {blog.comments.map(comment => (
+      <li key={comment.id}>{comment.text}</li>))}
+    </ul>
+    </>
+    }
   </div>
 }
 
