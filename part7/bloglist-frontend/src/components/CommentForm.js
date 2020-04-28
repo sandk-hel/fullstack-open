@@ -1,4 +1,5 @@
 import React from 'react'
+import { TextField, Button, FormGroup } from '@material-ui/core'
 
 const CommentForm = ({ addComment }) => {
   const onSubmit = (event) => {
@@ -8,9 +9,17 @@ const CommentForm = ({ addComment }) => {
   }
 
   return <form onSubmit={onSubmit}>
-      <input name='text' type='text' />
-      <button type='submit'>add comment</button>
-    </form>
+    <FormGroup >
+      <TextField
+        placeholder="Write something here..."
+        multiline
+        rows={2}
+        rowsMax={4}
+        name='text'
+      />
+      <Button type='submit'>add comment</Button>
+    </FormGroup>
+  </form>
 }
 
 export default CommentForm

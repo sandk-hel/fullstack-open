@@ -1,54 +1,45 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
+import { Typography, TextField, Button } from '@material-ui/core';
 
 const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   const addBlog = (event) => {
     event.preventDefault()
+    const title = event.target.title.value
+    const author = event.target.author.value
+    const url = event.target.url.value
     createBlog({
       title,
       author,
       url
     })
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    event.target.title.value = ''
+    event.target.author.value = ''
+    event.target.url.value = ''
   }
 
+  const topMargin = { marginTop: 20 }
   return <>
-    <h2>create new</h2>
+    <Typography variant='h4'>Create New</Typography>
     <form onSubmit={addBlog}>
       <div>
-        <label>title</label>
-        <input
-          name='title'
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-        />
+      <TextField required label="Title" defaultValue=""
+          name='title' />
       </div>
 
       <div>
-        <label>author</label>
-        <input
-          name='author'
-          value={author}
-          onChange={({ target }) => setAuthor(target.value)} />
+      <TextField required label="Author" defaultValue=""
+          name='author' />
       </div>
 
       <div>
-        <label>url</label>
-        <input
-          name='url'
-          value={url}
-          onChange={({ target }) => setUrl(target.value)}
-        />
+      <TextField required label="URL" defaultValue=""
+          name='url' />
       </div>
 
       <div>
-        <button type='submit'>create</button>
+        <Button variant="outlined" color="primary" type='submit' style={topMargin}>create</Button>
       </div>
 
     </form>

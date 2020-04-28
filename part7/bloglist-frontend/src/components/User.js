@@ -1,17 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import BlogList from './BlogList'
+import  { Typography, Divider } from '@material-ui/core'
 
 const User = ({ user }) => {
 
   const blogList = () => (
     <>
-      <strong>added blogs</strong>
-      <ul>
-        {user.blogs.map(blog => (
-          <li key={blog.id}>
-            {blog.title}
-          </li>))}
-      </ul>
+      <Typography variant='h5' style={{color:'brown'}}>Added blogs</Typography>
+      <Divider />
+      <BlogList blogs={user.blogs} />
     </>
   )
 
@@ -26,7 +24,7 @@ const User = ({ user }) => {
     return invalidUser()
   }
   return <div>
-    <h2>{user.name}</h2>
+    <Typography variant='h2' style={{margin: 20, textAlign: 'center'}}>{user.name}</Typography>
     {user.blogs.length === 0
       ? <p>No blogs</p>
       : blogList()}

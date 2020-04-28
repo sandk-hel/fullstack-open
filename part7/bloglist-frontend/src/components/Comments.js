@@ -1,21 +1,24 @@
 import React from 'react'
 import CommentForm from './CommentForm'
+import { Typography, Divider } from '@material-ui/core'
 
 const Comments = ({ comments, addComment }) => {
-  if(comments.length == 0) {
-    return <div>
-      <CommentForm addComment={addComment} />
-      <p>No comments yet</p>
-    </div>
-  }
-
+  const divider = () => <Divider variant="middle" style={{ margin: 20 }} />
+  const listStyle = { listStyle: 'none' }
   return <>
-    <h2>Comments</h2>
+    {divider()}
+    <Typography variant='h5'>Comments</Typography>
     <CommentForm addComment={addComment} />
-    <ul>
+    {comments.length === 0 
+      ? <p>No comments yet</p>
+      : <ul style={listStyle}>
     {comments.map(comment => (
-      <li key={comment.id}>{comment.text}</li>))}
+      <li key={comment.id}>
+        {comment.text}
+        {divider()}
+      </li>))}
     </ul>
+    }
     </>
 }
 

@@ -1,24 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Comments from './Comments'
+import { Typography, Link, IconButton } from '@material-ui/core'
+import { ThumbUpSharp } from '@material-ui/icons'
 
 const Blog = ({ blog, likeBlog,  addComment }) => {
   if (!blog) {
     return <p>No blog found</p>
   }
-  return <div>
+  return <div style={{marginTop: 20}}>
     <div>
-      <h2>
+      <Typography variant='h4'>
         {blog.title} {blog.author}
-      </h2>
+      </Typography>
     </div>
     <div>
       <div>
-        <a href={blog.url} target="_">{blog.url}</a>
+        <Link href={blog.url} target="_">{blog.url}</Link>
       </div>
       <div>
       {blog.likes} likes
-        <button onClick={() => likeBlog(blog) }>like</button>
+      <IconButton onClick={() => likeBlog(blog) } color="primary" aria-label="Like" component="span">
+        <ThumbUpSharp />
+      </IconButton>
       </div>
       <div>
         {blog.user.name}

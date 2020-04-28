@@ -5,7 +5,10 @@ import Users from './components/Users'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import { Switch, Route, Link, useRouteMatch, Redirect } from 'react-router-dom'
+import BlogList from './components/BlogList'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
+import { Button, TextField, Container, Typography } from '@material-ui/core'
+
 
 import {
   update,
@@ -64,35 +67,13 @@ const App = () => {
     dispatch(createNew(newBlog))
   }
 
-  const blogList = () => {
-    const blogStyle = {
-      paddingTop: 10,
-      paddingLeft: 2,
-      border: 'solid',
-      borderWidth: 1,
-      marginBottom: 5
-    }
-  
-    return (
-      <div>
-        {sortedBlogs.map(blog =>
-          <div style={blogStyle} key={blog.id}>
-            <Link to={`/blogs/${blog.id}`} key={blog.id}>
-              {blog.title}
-            </Link>
-          </div>
-        )}
-      </div>
-    )
-  }
-
   const blogForm = () => {
     return (
       <div>
         <Togglable buttonTitle='create new blog' ref={blogFormRef}>
           <BlogForm createBlog={createBlog} />
         </Togglable>
-        {blogList()}
+        <BlogList blogs={sortedBlogs} />
       </div>
     )
   }
@@ -101,22 +82,23 @@ const App = () => {
       <div>
         <form onSubmit={handleLogin}>
           <div>
-            <label>username</label>
-            <input type='text'
-              name='username'
+            <TextField required 
+              label="username" 
+              name='username' 
               value={username}
               onChange={({ target }) => setUsername(target.value)}
             />
           </div>
           <div>
-            <label>password</label>
-            <input type='password'
-              name='password'
+          <TextField required
+              type='password'
+              label="password" 
+              name='password' 
               value={password}
               onChange={({ target }) => setPassword(target.value)}
             />
           </div>
-          <button type="submit">login</button>
+          <Button type="submit">login</Button>
         </form>
       </div>
     )
@@ -141,9 +123,9 @@ const App = () => {
     : null
 
     return (
-    <div>
+    <Container>
       {user === null
-        ? <h2>log in to application</h2>
+        ? <Typography variant='caption'>Log in to the application</Typography>
         : <Navigation user={user} handleLogout={handleLogout} />
       }
       <Notification notification={notification} />
@@ -158,7 +140,7 @@ const App = () => {
           { user === null ? loginForm() : blogForm() }
         </Route>
       </Switch>
-    </div>
+    </Container>
   )
 }
 
