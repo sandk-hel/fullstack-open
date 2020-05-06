@@ -41,7 +41,7 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
-      <BornYearForm options={options}/>             
+      <BornYearForm options={options} show={props.showEditForm}/>             
     </div>
   )
 }

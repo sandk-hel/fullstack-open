@@ -3,12 +3,16 @@ import { useMutation } from '@apollo/client'
 import { UPDATE_BIRTH_YEAR } from '../queries'
 import Select from 'react-select'
 
-const BornYearForm = ({ options }) => {
+const BornYearForm = ({ options, show }) => {
   const [author, setAuthor] = useState(null)
   const [year, setYear] = useState('')
 
   const [updateBornYear] = useMutation(UPDATE_BIRTH_YEAR)
 
+  if (!show) {
+    return null
+  }
+  
   const submit = (event) => {
     event.preventDefault()
     
