@@ -13,10 +13,14 @@ const LoginForm = ({ show, setToken }) => {
       localStorage.setItem('library-frontend-token', token)
       setToken(token)
     }
-  }, [ result.data ] )
+  }, [ result.data, setToken ] )
 
   if (!show) {
     return null
+  }
+
+  if (result.loading)  {
+    return <div>Logging in</div>
   }
 
   const submit = (event) => {
