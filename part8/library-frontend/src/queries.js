@@ -59,3 +59,22 @@ export const LOGIN = gql `
     }
   }
 `
+
+export const RECOMMENDATION = gql`
+query {
+  recommendation {
+    books {
+      title
+      author {
+        name
+        born
+        bookCount
+        id
+      }
+      published
+      id
+    }
+    genre
+  }
+}
+`

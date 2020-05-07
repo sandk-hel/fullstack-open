@@ -5,6 +5,7 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
+import RecommendedBooks from './components/RecommendedBooks'
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -25,6 +26,7 @@ const App = () => {
   }, [ token ])
 
   const logout = () => {
+    setPage('authors')
     localStorage.clear()
     setToken(null)
     client.resetStore()
@@ -39,6 +41,7 @@ const App = () => {
           ? <button onClick={() => setPage('login')}>login</button>
           : <>
             <button onClick={() => setPage('add')}>add book</button>
+            <button onClick={() => setPage('recommendations')}>recommend</button>
             <button onClick={logout}>logout</button>
           </>
         }
@@ -61,7 +64,8 @@ const App = () => {
         show={page === 'login'}
         setToken={setToken}
         />
-      
+      <RecommendedBooks 
+        show={page === 'recommendations'}/>
     </div>
   )
 }
