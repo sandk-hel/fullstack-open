@@ -2,16 +2,15 @@ import React, { useState, useEffect } from 'react'
 import { useLazyQuery } from '@apollo/client'
 import { BOOKS_FOR_GENRE } from '../queries'
 
-const Books = (props) => {
+const Books = ({ show, query: { getAllBooks, data, refetch }}) => {
   const [allGenres, setAllGenres] = useState([])
   const [genre, setGenre] = useState(null)
-  const [getAllBooks, { data, refetch}] = useLazyQuery(BOOKS_FOR_GENRE) 
 
   useEffect(() => {
     getAllBooks({ variables: { genre } })
   }, [ genre ])
 
-  if (!props.show) {
+  if (!show) {
     return null
   }
 

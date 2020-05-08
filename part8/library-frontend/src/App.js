@@ -6,13 +6,17 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import RecommendedBooks from './components/RecommendedBooks'
+import { useLazyQuery } from '@apollo/client'
+import { BOOKS_FOR_GENRE } from './queries'
 
 const App = () => {
   const [token, setToken] = useState(null)
   const [page, setPage] = useState('authors')
   const client = useApolloClient()
-
   const [error, setError] = useState(null)
+
+  const [getAllBooks, { data, refetch}] = useLazyQuery(BOOKS_FOR_GENRE) 
+
 
   useEffect(() => {
     const token = localStorage.getItem('library-frontend-token')
@@ -39,6 +43,10 @@ const App = () => {
     setTimeout(() => setError(null), 5000)
   }
 
+  const onAddNewBook = () => {
+    refetch()
+  }
+
   return (
     <div>
       <Notify message={error} />
@@ -62,10 +70,12 @@ const App = () => {
 
       <Books
         show={page === 'books'}
-      />
+        query = {{ getAllBooks, data, refetch }}
+        />
 
       <NewBook
         show={page === 'add'}
+        addNewBook={onAddNewBook}
       />
 
       <LoginForm 
@@ -73,6 +83,7 @@ const App = () => {
         setToken={setToken}
         setError={notify}
         />
+
       <RecommendedBooks 
         show={page === 'recommendations'}
         setError={notify}
