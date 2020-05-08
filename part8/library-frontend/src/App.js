@@ -12,6 +12,8 @@ const App = () => {
   const [page, setPage] = useState('authors')
   const client = useApolloClient()
 
+  const [error, setError] = useState(null)
+
   useEffect(() => {
     const token = localStorage.getItem('library-frontend-token')
     if (token) {
@@ -23,7 +25,7 @@ const App = () => {
     if (page === 'login' && token !== null) {
       setPage('authors')
     }
-  }, [ token ])
+  }, [ token, page ])
 
   const logout = () => {
     setPage('authors')
@@ -32,8 +34,14 @@ const App = () => {
     client.resetStore()
   }
 
+  const notify = (error) => {
+    setError(error)
+    setTimeout(() => setError(null), 5000)
+  }
+
   return (
     <div>
+      <Notify message={error} />
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
@@ -63,11 +71,24 @@ const App = () => {
       <LoginForm 
         show={page === 'login'}
         setToken={setToken}
+        setError={notify}
         />
       <RecommendedBooks 
-        show={page === 'recommendations'}/>
+        show={page === 'recommendations'}
+        setError={notify}
+        />
     </div>
   )
+}
+
+const Notify = ({ message }) => {
+  if (!message) {
+    return null
+  }
+
+  return <div style={{color: 'red'}}>
+    {message}
+  </div>
 }
 
 export default App

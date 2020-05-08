@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery, useLazyQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { RECOMMENDATION } from '../queries'
 
 const RecommendedBooks = ({ show, refetch }) => {
@@ -16,9 +16,6 @@ const RecommendedBooks = ({ show, refetch }) => {
   }, [ show, getResult ])
 
   useEffect(() => {
-    if (result.error) {
-      return
-    }
     if (result.loading) {
       return 
     }
