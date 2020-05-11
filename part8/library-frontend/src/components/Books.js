@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useLazyQuery } from '@apollo/client'
-import { BOOKS_FOR_GENRE } from '../queries'
 
 const Books = ({ show, query: { getAllBooks, data, refetch }}) => {
   const [allGenres, setAllGenres] = useState([])
@@ -8,7 +6,7 @@ const Books = ({ show, query: { getAllBooks, data, refetch }}) => {
 
   useEffect(() => {
     getAllBooks({ variables: { genre } })
-  }, [ genre ])
+  }, [ genre, getAllBooks ])
 
   if (!show) {
     return null
