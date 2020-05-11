@@ -81,3 +81,12 @@ query {
 }
 ${BOOK_DETAIL}
 `
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetail
+    }
+  }
+${BOOK_DETAIL}
+`

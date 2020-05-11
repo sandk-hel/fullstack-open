@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect } from 'react'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import RecommendedBooks from './components/RecommendedBooks'
 import { useLazyQuery } from '@apollo/client'
-import { BOOKS_FOR_GENRE } from './queries'
+import { BOOKS_FOR_GENRE, BOOK_ADDED } from './queries'
 
 const App = () => {
   const [token, setToken] = useState(null)
@@ -17,6 +17,11 @@ const App = () => {
 
   const [getAllBooks, { data, refetch}] = useLazyQuery(BOOKS_FOR_GENRE) 
 
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      window.alert(`${subscriptionData.data.bookAdded.title} added`)
+    }
+  })
 
   useEffect(() => {
     const token = localStorage.getItem('library-frontend-token')
