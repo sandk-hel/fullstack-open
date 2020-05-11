@@ -17,9 +17,36 @@ const App = () => {
 
   const [getAllBooks, { data, refetch}] = useLazyQuery(BOOKS_FOR_GENRE) 
 
+  const updateCacheWith = (bookAdded) => {
+    const includedInCache = (set, book) => 
+      set.map(book => book.id).includes(book.id)
+      
+    const genres = [...bookAdded.genres, null]
+
+    genres.forEach((genre) => {
+      const booksInCache = client.readQuery({ 
+        query: BOOKS_FOR_GENRE,
+        variables: { genre: genre }
+      })
+
+      if (!booksInCache) {
+        return
+      }
+
+      if (!includedInCache(booksInCache.allBooks || [], bookAdded)) {
+        const allBooks = booksInCache.allBooks || []
+        client.writeQuery({
+          query: BOOKS_FOR_GENRE,
+          variables: { genre: genre },
+          data: { allBooks: allBooks.concat(bookAdded) }
+        })
+      }
+    })
+  }
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
-      window.alert(`${subscriptionData.data.bookAdded.title} added`)
+      updateCacheWith(subscriptionData.data.bookAdded)
     }
   })
 
@@ -46,10 +73,6 @@ const App = () => {
   const notify = (error) => {
     setError(error)
     setTimeout(() => setError(null), 5000)
-  }
-
-  const onAddNewBook = () => {
-    refetch()
   }
 
   return (
@@ -80,7 +103,6 @@ const App = () => {
 
       <NewBook
         show={page === 'add'}
-        addNewBook={onAddNewBook}
       />
 
       <LoginForm 

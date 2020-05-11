@@ -16,9 +16,14 @@ const Books = ({ show, query: { getAllBooks, data, refetch }}) => {
     return null
   }
 
+  const selectGenre = genre => {
+    setGenre(genre)
+    refetch()
+  }
+
   const books = data.allBooks
   
-  if (allGenres.length === 0) {
+  if (allGenres.length === 0 && books.length > 0 ) {
     const genres = books.reduce((acc, book) =>  {
       const newGenres = book.genres.filter(genre => !acc.includes(genre))
       return acc.concat(newGenres)
@@ -53,7 +58,7 @@ const Books = ({ show, query: { getAllBooks, data, refetch }}) => {
         </tbody>
       </table>
       <div>
-        {allGenres.map(genre => <button key={genre} onClick={() => { setGenre(genre); refetch() }}>{genre}</button>)}
+        {allGenres.map(genre => <button key={genre} onClick={() => selectGenre(genre)}>{genre}</button>)}
       </div>
     </div>
   )
