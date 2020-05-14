@@ -1,20 +1,18 @@
 import React from 'react';
-
-interface CourseEntry {
-  name: string;
-  exerciseCount: number;
-}
+import Part from './Part'
+import { CoursePart } from '../types'
 
 interface ContentProps {
-  courses: Array<CourseEntry>;
+  courses: Array<CoursePart>;
 }
 
 const Content: React.FC<ContentProps> = (({ courses }) => (
   <>
     {courses.map(course =>
-      <p key={course.name}>
-        {course.name} {course.exerciseCount}
-      </p>
+      <>
+        <Part key={course.name} course={course} />
+        <hr />
+      </>
     )}
   </>
 ));
