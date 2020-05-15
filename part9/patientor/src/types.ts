@@ -10,11 +10,19 @@ export enum Gender {
   Other = "other"
 }
 
-export interface Patient {
+export interface Entry {
+
+}
+
+interface BasePatient {
   id: string;
   name: string;
   occupation: string;
   gender: Gender;
   ssn?: string;
   dateOfBirth?: string;
+  entry: Entry[]
 }
+
+export type Patient = Omit<BasePatient, 'entry'> 
+export type PatientDetail = BasePatient
