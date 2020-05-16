@@ -8,7 +8,7 @@ import { useStateValue, setPatientList, setDiagnoses } from "./state";
 import { Patient, Diagnosis } from "./types";
 
 import PatientListPage from "./PatientListPage";
-import PatientDescription from "./components/PatientDescription"
+import PatientDescription from "./PatientDescriptionPage"
 
 
 
