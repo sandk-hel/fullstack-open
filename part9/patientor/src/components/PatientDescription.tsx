@@ -8,7 +8,7 @@ import { useStateValue, addPatientDetail } from '../state';
 
 const PatientDescription: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ patientsDetail }, dispatch] = useStateValue();
+  const [{ patientsDetail, diagnoses }, dispatch] = useStateValue();
   const [error, setError] = useState<string>();
 
   const patient = patientsDetail[id];
@@ -24,7 +24,6 @@ const PatientDescription: React.FC = () => {
     if (patient.gender === Gender.Female) {
       return "mercury"
     }
-
     return "neuter"
   }
 
@@ -34,13 +33,21 @@ const PatientDescription: React.FC = () => {
     }
 
     return patient.entries.map(entry => {
-      return <div>
+      return <div key={entry.id}>
           <p><i>{entry.date} {entry.description}</i></p>
           <ul>
-            {entry.diagnosisCodes?.map(code => <li>{code}</li>)}
+            {entry.diagnosisCodes?.map(code => diagnosisElement(code))}
           </ul>
         </div>
     })
+  }
+
+  const diagnosisElement = (code: string) => {
+    const diag = diagnoses.find(d => d.code === code)
+    if (!diag) {
+      return <li key={code}>{code}</li>
+    }
+    return  <li key={code}>{code} {diag.name}</li>
   }
 
   useEffect(() => {
