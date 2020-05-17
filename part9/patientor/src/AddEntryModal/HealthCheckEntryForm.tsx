@@ -24,7 +24,23 @@ export const HealthCheckEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) =>
         type: "HealthCheck"
         }}
     onSubmit={onSubmit}
-   validate={ () => ({})}
+   validate={ values => {
+    const requiredError = "Field is required";
+    const errors: { [field: string]: string } = {};
+    if (!values.description) {
+      errors.description = requiredError;
+    }
+    if (!values.specialist) {
+      errors.specialist = requiredError;
+    }
+    if (!values.date) {
+      errors.date = requiredError;
+    }
+    if (values.healthCheckRating === undefined) {
+      errors.healthCheckRating = requiredError;
+    }
+    return errors;
+    }}
     >
     {({ isValid, dirty, handleSubmit, setFieldValue, setFieldTouched }) => (
     <Form className="form ui" onSubmit={handleSubmit}>
