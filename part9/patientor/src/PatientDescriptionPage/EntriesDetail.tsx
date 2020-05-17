@@ -8,6 +8,7 @@ const EntriesDetail: React.FC<{ entries: Entry[] }> = ({ entries }) => {
   }
   return <div>
       {entries.map(entry =>  <EntryDetail key={entry.id} entry={entry} />)}
-    </div>
-}
+    </div>;
+};
+
 export default EntriesDetail;

@@ -8,7 +8,7 @@ const OccupationalHealthCareEntryDetail: React.FC<{entry:  OccupationalHealthCar
   <h2>{entry.date} <Icon name="stethoscope" />{entry.employerName}</h2>
   <p><i>{entry.description}</i></p>
   <DiagnosisCodeDetails codes={entry.diagnosisCodes} />
-</div>
-}
+</div>;
+};
 
 export default OccupationalHealthCareEntryDetail;

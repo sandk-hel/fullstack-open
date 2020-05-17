@@ -8,7 +8,7 @@ const HospitalEntryDetail: React.FC<{entry:  HospitalEntry}> = ({ entry }) => {
   <h2>{entry.date} <Icon name="hospital" /></h2>
   <p><i>{entry.description}</i></p>
   <DiagnosisCodeDetails codes={entry.diagnosisCodes} />
-</div>
-}
+</div>;
+};
 
 export default HospitalEntryDetail;

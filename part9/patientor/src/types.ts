@@ -44,10 +44,10 @@ export interface HospitalEntry extends BaseEntry {
 export interface OccupationalHealthCareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
   employerName: string;
-  sickLeave?: { startDate: string; endDate: string }
+  sickLeave?: { startDate: string; endDate: string };
 }
 
-export type Entry = HealthCheckEntry | HospitalEntry | OccupationalHealthCareEntry
+export type Entry = HealthCheckEntry | HospitalEntry | OccupationalHealthCareEntry;
 
 interface BasePatient {
   id: string;
@@ -56,8 +56,8 @@ interface BasePatient {
   gender: Gender;
   ssn?: string;
   dateOfBirth?: string;
-  entries: Entry[]
+  entries: Entry[];
 }
 
-export type Patient = Omit<BasePatient, 'entries'> 
-export type PatientDetail = BasePatient
+export type Patient = Omit<BasePatient, 'entries'>;
+export type PatientDetail = BasePatient;

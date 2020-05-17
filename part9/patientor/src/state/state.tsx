@@ -4,9 +4,9 @@ import { Patient, PatientDetail, Diagnosis } from "../types";
 import { Action } from "./reducer";
 
 export type State = {
-  patients: { [id: string]: Patient },
-  patientsDetail: { [id: string]: PatientDetail | undefined },
-  diagnoses: Diagnosis[]
+  patients: { [id: string]: Patient };
+  patientsDetail: { [id: string]: PatientDetail | undefined };
+  diagnoses: Diagnosis[];
 };
 
 const initialState: State = {
@@ -56,11 +56,11 @@ export const insertNewPatient = (patient: Patient): Action => {
     type: "ADD_PATIENT", 
     payload: patient 
   };
-}
+};
 
 export const setDiagnoses = (diagnoses: Diagnosis[]): Action => {
   return {
     type: "SET_DIAGNOSES",
     payload: diagnoses
   };
-}
+};

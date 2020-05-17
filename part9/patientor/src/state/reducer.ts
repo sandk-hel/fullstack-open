@@ -17,7 +17,7 @@ export type Action =
   | {
     type: "SET_DIAGNOSES";
     payload: Diagnosis[];
-  }
+  };
 
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -47,12 +47,12 @@ export const reducer = (state: State, action: Action): State => {
           ...state.patientsDetail,
           [action.payload.id]: action.payload
         }
-      }
+      };
     case "SET_DIAGNOSES":
       return {
         ...state, 
         diagnoses: action.payload
-      }
+      };
     default:
       return state;
   }
