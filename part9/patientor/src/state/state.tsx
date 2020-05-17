@@ -56,7 +56,7 @@ export const updatePatient = (patient: PatientDetail): Action => {
     type: "UPDATE_PATIENT_DETAIL",
     payload: patient
   };
-}
+};
 
 export const insertNewPatient = (patient: Patient): Action => {
   return { 

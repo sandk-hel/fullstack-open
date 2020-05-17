@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from 'semantic-ui-react';
-import { PatientDetail, Patient } from '../types';
+import { PatientDetail } from '../types';
 import { apiBaseUrl } from '../constants';
 import { useStateValue, addPatientDetail, updatePatient } from '../state';
 import EntriesDetail from './EntriesDetail';
 import PatientDetailItem from './PatientDetail';
 import AddEntryModal from '../AddEntryModal';
-import { HealthCheckFormValues } from '../AddEntryModal/HealthCheckEntryForm';
+import { AddEntryFormValues } from '../AddEntryModal/AddEntryForm';
+import { toNewEntryType, validate } from '../utility';
 
 
 const PatientDescription: React.FC = () => {
@@ -24,11 +25,13 @@ const PatientDescription: React.FC = () => {
     setModalOpen(false);
   };
 
-  const submit = async (values: HealthCheckFormValues) => {
+  const submit = async (values: AddEntryFormValues) => {
     try {
+      const newEntryTypes = toNewEntryType(values);
+      console.log(newEntryTypes);
       const response = await axios.post<PatientDetail>(
         `${apiBaseUrl}/patients/${id}/entries`,
-        values
+        newEntryTypes
       );
       dispatch(updatePatient(response.data));
       closeModal();
@@ -65,7 +68,8 @@ const PatientDescription: React.FC = () => {
       <AddEntryModal 
         onClose={closeModal}
         modelOpen={modalOpen}
-        submit={submit}
+        submit={submit} 
+        validate={validate}
         error={error}
       />
       <PatientDetailItem patient={patient} />

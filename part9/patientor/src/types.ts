@@ -16,7 +16,7 @@ export interface Diagnosis {
   latin?: string;
 }
 
-interface BaseEntry {
+export interface BaseEntry {
   id: string;
   description: string;
   specialist: string;
@@ -61,3 +61,5 @@ interface BasePatient {
 
 export type Patient = Omit<BasePatient, 'entries'>;
 export type PatientDetail = BasePatient;
+
+export type ValidationErrorMessageType = { [field: string]: (string | { startDate?: string; endDate?: string }) };
