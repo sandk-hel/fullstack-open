@@ -24,6 +24,8 @@ export interface BaseEntry {
   diagnosisCodes?: Array<Diagnosis['code']>;
 }
 
+export type EntryType =  "HealthCheck" | "OccupationalHealthcare" | "Hospital";
+
 export enum HealthCheckRating {
   "Healthy" = 0,
   "LowRisk" = 1,
@@ -62,4 +64,9 @@ interface BasePatient {
 export type Patient = Omit<BasePatient, 'entries'>;
 export type PatientDetail = BasePatient;
 
-export type ValidationErrorMessageType = { [field: string]: (string | { startDate?: string; endDate?: string }) };
+export type ValidationErrorMessageType = { [field: string]: (
+  string | 
+  { startDate?: string; endDate?: string } | 
+  { date?: string; criteria?: string}
+  );
+};

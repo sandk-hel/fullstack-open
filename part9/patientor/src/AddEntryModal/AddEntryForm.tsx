@@ -3,14 +3,14 @@ import { useStateValue } from '../state';
 import { Formik, Field } from 'formik';
 import { Form, Button, Grid } from 'semantic-ui-react';
 import { TextField, DiagnosisSelection, NumberField } from '../AddPatientModal/FormField';
-import { BaseEntry, HealthCheckRating } from '../types';
-import { ValidationErrorMessageType } from '../types';
+import { BaseEntry, HealthCheckRating, ValidationErrorMessageType, EntryType} from '../types';
 
 export interface AddEntryFormValues extends Omit<BaseEntry, 'id'> {
   healthCheckRating: HealthCheckRating;
   employerName: string;
   sickLeave?: { startDate: string; endDate: string };
-  type: "HealthCheck" | "OccupationalHealthcare";
+  discharge: { date: string; criteria: string };
+  type: EntryType;
 } 
 
 interface Props {
@@ -20,6 +20,56 @@ interface Props {
 }
 
 export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel, validate }) => {
+
+  const typeSpecificFormFields = (type:  EntryType) => {
+    switch (type) {
+      case "HealthCheck": 
+        return  <Field
+        label="Health Check Rating"
+        name="healthCheckRating"
+        component={NumberField}
+        min={0}
+        max={3}
+      />;
+    case "OccupationalHealthcare":
+      return <>
+      <Field
+        label='Employer'
+        placeholder='employer'
+        name='employerName'
+        component={TextField}
+      />
+      <Field
+        label="Sick leave start"
+        placeholder="YYYY-MM-DD"
+        name="sickLeave.startDate"
+        component={TextField}
+      />
+      <Field
+        label="Sick leave end"
+        placeholder="YYYY-MM-DD"
+        name="sickLeave.endDate"
+        component={TextField}
+      />
+    </>;
+    case "Hospital":
+      return <>
+        <Field
+        label="Discharge date"
+        placeholder="YYYY-MM-DD"
+        name="discharge.date"
+        component={TextField}
+      />
+        <Field
+        label='Discharge Criteria'
+        placeholder='discharge criteria'
+        name='discharge.criteria'
+        component={TextField}
+      />
+      </>;
+    }
+  };
+
   const [{ diagnoses }] = useStateValue();
   return <Formik
     initialValues={{
@@ -31,18 +81,17 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel, validate }) 
       date: "",
       diagnosisCodes: [],
       type: "HealthCheck",
+      discharge: {date: "", criteria: ""},
     }}
     onSubmit={onSubmit}
-    validate={validate}
-  >
+    validate={validate}>
     {({ isValid, dirty, handleSubmit, setFieldValue, setFieldTouched, values }) => (
       <Form className="form ui" onSubmit={handleSubmit}>
-
         <Field as="select" name="type">
           <option value="HealthCheck">Health Check</option>
           <option value="OccupationalHealthcare">Occupational Health Care</option>
+          <option value="Hospital">Hospital</option>
         </Field>
-
         <Field
           label='Description'
           placeholder='Description'
@@ -65,36 +114,7 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel, validate }) 
           diagnoses={Object.values(diagnoses)}
           setFieldValue={setFieldValue}
           setFieldTouched={setFieldTouched} />
-        {values.type === 'HealthCheck'
-          ? <Field
-            label="Health Check Rating"
-            name="healthCheckRating"
-            component={NumberField}
-            min={0}
-            max={3}
-          />
-          :
-          <>
-            <Field
-              label='Employer'
-              placeholder='employer'
-              name='employerName'
-              component={TextField}
-            />
-            <Field
-              label="Sick leave start"
-              placeholder="YYYY-MM-DD"
-              name="sickLeave.startDate"
-              component={TextField}
-            />
-            <Field
-              label="Sick leave end"
-              placeholder="YYYY-MM-DD"
-              name="sickLeave.endDate"
-              component={TextField}
-            />
-          </>
-        }
+          {typeSpecificFormFields(values.type)}
         <Grid>
           <Grid.Column floated="left">
             <Button type="cancel"

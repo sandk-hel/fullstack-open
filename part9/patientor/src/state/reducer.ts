@@ -60,7 +60,6 @@ export const reducer = (state: State, action: Action): State => {
           [action.payload.id]: action.payload
         }
       };
-      console.log(tempState);
       return tempState;
 
     case "SET_DIAGNOSES":
