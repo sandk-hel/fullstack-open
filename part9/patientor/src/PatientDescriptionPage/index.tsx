@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from 'semantic-ui-react';
-import { PatientDetail } from '../types';
+import { PatientDetail, Patient } from '../types';
 import { apiBaseUrl } from '../constants';
-import { useStateValue, addPatientDetail } from '../state';
+import { useStateValue, addPatientDetail, updatePatient } from '../state';
 import EntriesDetail from './EntriesDetail';
 import PatientDetailItem from './PatientDetail';
 import AddEntryModal from '../AddEntryModal';
@@ -19,10 +19,22 @@ const PatientDescription: React.FC = () => {
   const patient = patientsDetail[id];
 
   const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+  const closeModal = () => {
+    setError(undefined);
+    setModalOpen(false);
+  };
 
   const submit = async (values: HealthCheckFormValues) => {
-    console.log('Submitted values ', values);
+    try {
+      const response = await axios.post<PatientDetail>(
+        `${apiBaseUrl}/patients/${id}/entries`,
+        values
+      );
+      dispatch(updatePatient(response.data));
+      closeModal();
+    } catch (exception) {
+      setError(exception.response.data.error);
+    }
   };
 
   useEffect(() => {
@@ -43,12 +55,13 @@ const PatientDescription: React.FC = () => {
     }
   }, [patient, dispatch, id]);
 
-  if (error) {
-    return <h3 style={{color: 'red'}}>User could not be found.</h3>;
-  }
-
   if (patient) {
-    return <div>
+    return <>
+     { error 
+      ? <h3 style={{color: 'red'}}>{error}</h3>
+      : null
+     }
+    <div>
       <AddEntryModal 
         onClose={closeModal}
         modelOpen={modalOpen}
@@ -60,7 +73,12 @@ const PatientDescription: React.FC = () => {
       <div>
         <Button style={{marginTop: 10}} onClick={openModal}>Add New Entry</Button>
       </div>
-    </div>;
+    </div>
+    </>;
+  }
+
+  if (error) {
+    return <h3 style={{color: 'red'}}>{error}</h3>;
   }
 
   return <h3>Patient loading</h3>;

@@ -26,7 +26,7 @@ export const HealthCheckEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) =>
     onSubmit={onSubmit}
    validate={ () => ({})}
     >
-    {({ isValid, dirty, handleSubmit }) => (
+    {({ isValid, dirty, handleSubmit, setFieldValue, setFieldTouched }) => (
     <Form className="form ui" onSubmit={handleSubmit}>
         <Field
           label='Description'
@@ -48,8 +48,8 @@ export const HealthCheckEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) =>
         />
         <DiagnosisSelection
           diagnoses={Object.values(diagnoses)}
-          setFieldValue={() => {}}
-          setFieldTouched={() => {}} />
+          setFieldValue={setFieldValue}
+          setFieldTouched={setFieldTouched} />
         <Field
           label="Health Check Rating"
           name="healthCheckRating"

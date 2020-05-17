@@ -32,7 +32,6 @@ const PatientListPage: React.FC = () => {
       dispatch(insertNewPatient(newPatient));
       closeModal();
     } catch (e) {
-      console.error(e.response.data);
       setError(e.response.data.error);
     }
   };

@@ -51,6 +51,13 @@ export const setPatientList = (patientListFromApi: Patient[]): Action => {
   };
 };
 
+export const updatePatient = (patient: PatientDetail): Action => {
+  return {
+    type: "UPDATE_PATIENT_DETAIL",
+    payload: patient
+  };
+}
+
 export const insertNewPatient = (patient: Patient): Action => {
   return { 
     type: "ADD_PATIENT", 
