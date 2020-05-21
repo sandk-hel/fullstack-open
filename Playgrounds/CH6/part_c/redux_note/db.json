@@ -1,0 +1,29 @@
+{
+  "notes": [
+    {
+      "content": "the app state is in redux store",
+      "important": true,
+      "id": 1
+    },
+    {
+      "content": "state changes are made with actions",
+      "important": false,
+      "id": 2
+    },
+    {
+      "content": "Redux is really awesome man!",
+      "important": false,
+      "id": 3
+    },
+    {
+      "content": "How did I miss this saaga thingy ?",
+      "important": false,
+      "id": 4
+    },
+    {
+      "content": "And this is new with thunk",
+      "important": false,
+      "id": 5
+    }
+  ]
+}
